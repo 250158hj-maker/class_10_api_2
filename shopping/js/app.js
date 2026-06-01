@@ -169,7 +169,7 @@ function updateCartList(cartObj) {
                             min="1" 
                             onchange="updateQuantity(${p.id}, this.value)"
                             class="px-2 py-1 w-16 border border-gray-300 rounded text-center text-sm">
-                        <button onclick="removeItem(${p.id})" class="text-xs bg-red-500 text-white px-2 py-1 rounded">削除</button>
+                        <button onClick="removeItem(${p.id})" class="text-xs bg-red-500 text-white px-2 py-1 rounded">削除</button>
                     </div>
                 </div>
             </div>
@@ -205,16 +205,15 @@ async function updateQuantity(productId, qty) {
 
 // カートから商品を削除
 async function removeItem(productId) {
-  const uri = "api/cart/remove.php";
+  const url = "api/cart/remove.php";
   if (!confirm("商品ID " + productId + " を削除しますか？")) {
     return;
   }
 
-  // TODO: POSTリクエストで商品ID(id = productId)を送信
-  const result = await fetch(uri, {
-    method: "",
+  const result = await fetch(url, {
+    method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: "",
+    body: JSON.stringify({ id: productId }),
   });
   // JSON形式でレスポンスを取得
   const data = await result.json();
