@@ -1,5 +1,5 @@
 const PREFECTURE_FILE_PATH = "./data/prefectures.json";
-const SEARCH_URI = "https://zipcloud.ibsnet.co.jp/api/search";
+const SEARCH_URL = "https://zipcloud.ibsnet.co.jp/api/search";
 
 const errorDisplay = document.getElementById("error");
 const loadingModal = document.getElementById("loading-modal");
@@ -35,9 +35,9 @@ const renderPrefectures = prefectures => {
 const searchAddress = async zipcode => {
   try {
     const query_param = new URLSearchParams({ zipcode: zipcode });
-    // TODO: SEARCH_URI に zipcode を追加
-    const uri = SEARCH_URI;
-    console.log(uri);
+    // TODO: SEARCH_URL に zipcode を追加
+    const url = SEARCH_URL;
+    console.log(url);
     // TODO: fetch(): 郵便番号検索APIにアクセス（非同期）
     const response = {};
     // TODO: JSONデータを変換（非同期）
