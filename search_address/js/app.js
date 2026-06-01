@@ -35,13 +35,9 @@ const renderPrefectures = prefectures => {
 const searchAddress = async zipcode => {
   try {
     const query_param = new URLSearchParams({ zipcode: zipcode });
-    // TODO: SEARCH_URL に zipcode を追加
-    const url = SEARCH_URL;
-    console.log(url);
-    // TODO: fetch(): 郵便番号検索APIにアクセス（非同期）
-    const response = {};
-    // TODO: JSONデータを変換（非同期）
-    const data = {};
+    const url = `${SEARCH_URL}?${query_param.toString()}`;
+    const response = await fetch(url);
+    const data = await response.json();
     return data;
   } catch (error) {
     errorDisplay.innerHTML = error;
@@ -58,15 +54,13 @@ const searchHandler = async () => {
   errorDisplay.innerHTML = "";
 
   try {
-    // TODO: 郵便番号検索APIにアクセス
     const data = await searchAddress(zipcode);
 
     if (data && data.results) {
       const results = data.results[0];
-      // TODO: value に都道府県コード設定: prefcode
-      document.getElementById("prefecture").value = "";
-      // TODO: テキストに住所設定: address2, address3
-      document.getElementById("city").value = "";
+      document.getElementById("prefecture").value = results.prefcode;
+      document.getElementById("city").value =
+        results.address2 + results.address3;
     } else {
       errorDisplay.innerHTML = data.message || "住所が見つかりませんでした";
     }
@@ -78,7 +72,3 @@ const searchHandler = async () => {
     }, 500);
   }
 };
-
-(() => {
-  loadPrefectures();
-})();
