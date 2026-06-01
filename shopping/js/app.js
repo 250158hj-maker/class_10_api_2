@@ -1,47 +1,39 @@
 // UI
-const grid = document.getElementById('product-grid');
-const loader = document.getElementById('loading-modal');
-const detailModal = document.getElementById('detail-modal');
-const detailContent = document.getElementById('detail-content');
-const closeButton = document.getElementById('close-detail');
-const badge = document.getElementById('cart-count');
-const cartOpenBtn = document.getElementById('cart-open-btn');
-const cartCloseBtn = document.getElementById('cart-close-btn');
-const cartModal = document.getElementById('cart-modal');
+const grid = document.getElementById("product-grid");
+const loader = document.getElementById("loading-modal");
+const detailModal = document.getElementById("detail-modal");
+const detailContent = document.getElementById("detail-content");
+const closeButton = document.getElementById("close-detail");
+const badge = document.getElementById("cart-count");
+const cartOpenBtn = document.getElementById("cart-open-btn");
+const cartCloseBtn = document.getElementById("cart-close-btn");
+const cartModal = document.getElementById("cart-modal");
 
 // 商品データ
 let allProducts = [];
 
 // APIから商品データを取得
 async function fetchProducts() {
-    // ローディング表示
-    loader.classList.remove('hidden');
-    try {
-        // 商品データAPIのURL
-        // const productsApiURL = 'https://fakestoreapi.com/products';
-        // ローカルPHP APIのURLを指定: api/products/get.php
-        const productsApiURL = 'api/products/get.php';
-
-        // TODO: APIから商品データを取得: fetchAPI
-        const response = {};
-        // APIレスポンスをチェック
-        if (!response.ok) showFlash('商品データの取得に失敗しました');
-        // TODO: JSON形式でレスポンスを取得: json()
-        allProducts = [];
-        // 商品一覧を描画
-        renderProducts(allProducts);
-    } catch (error) {
-        grid.innerHTML = `<p class="text-red-500 text-center col-span-full">${error.message}</p>`;
-    } finally {
-        // ローディング非表示
-        loader.classList.add('hidden');
-    }
+  loader.classList.remove("hidden");
+  try {
+    const productsApiURL = "https://fakestoreapi.com/products";
+    const response = await fetch(productsApiURL);
+    if (!response.ok) showFlash("商品データの取得に失敗しました");
+    allProducts = await response.json();
+    renderProducts(allProducts);
+  } catch (error) {
+    grid.innerHTML = `<p class="text-red-500 text-center col-span-full">${error.message}</p>`;
+  } finally {
+    loader.classList.add("hidden");
+  }
 }
 
 // 商品一覧を描画
 function renderProducts(products) {
-    // TODO: 商品一覧をレンダリング
-    grid.innerHTML = products.map(p => `
+  // TODO: 商品一覧をレンダリング
+  grid.innerHTML = products
+    .map(
+      p => `
         <div class="bg-white border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition cursor-pointer product-card" data-id="${p.id}">
             <div class="h-48 p-4 flex items-center justify-center">
                 <img src="" alt="${p.title}" class="max-h-full object-contain">
@@ -59,17 +51,19 @@ function renderProducts(products) {
                 <p class="text-lg font-bold text-gray-900 mt-2">$価格</p>
             </div>
         </div>
-    `).join('');
+    `,
+    )
+    .join("");
 }
 
 // 商品詳細を表示
 function showDetail(productId) {
-    // 商品データを取得
-    const p = allProducts.find(item => item.id == productId);
-    if (!p) return;
+  // 商品データを取得
+  const p = allProducts.find(item => item.id == productId);
+  if (!p) return;
 
-    // 商品詳細を表示
-    detailContent.innerHTML = `
+  // 商品詳細を表示
+  detailContent.innerHTML = `
         <div class="md:flex gap-8">
             <div class="md:w-1/2 flex items-center justify-center bg-white rounded-lg p-4">
                 <img src="${p.image}" class="max-h-64 object-contain">
@@ -94,81 +88,82 @@ function showDetail(productId) {
             </div>
         </div>
     `;
-    // モーダル表示
-    detailModal.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
+  // モーダル表示
+  detailModal.classList.remove("hidden");
+  document.body.style.overflow = "hidden";
 }
 
 // 初期カート情報の取得
 async function fetchInitialCart() {
-    try {
-        const uri = "api/cart/get.php";
-        // TODO: GETリクエストで現在のカート情報を取得: fetchAPI
-        const response = {};
-        // TODO: JSON形式でレスポンスを取得: json()
-        const result = {};
-        console.log('Initial Cart Fetch Result:', result);
+  try {
+    const uri = "api/cart/get.php";
+    // TODO: GETリクエストで現在のカート情報を取得: fetchAPI
+    const response = {};
+    // TODO: JSON形式でレスポンスを取得: json()
+    const result = {};
+    console.log("Initial Cart Fetch Result:", result);
 
-        // カートの中身があれば反映
-        if (result.cart) {
-            updateCartBadge(result.cartCount);
-            updateCartList(result.cart);
-        }
-    } catch (error) {
-        console.error('Initial Cart Fetch Error:', error);
+    // カートの中身があれば反映
+    if (result.cart) {
+      updateCartBadge(result.cartCount);
+      updateCartList(result.cart);
     }
+  } catch (error) {
+    console.error("Initial Cart Fetch Error:", error);
+  }
 }
 
 // PHP APIへ送信
 async function addToCart(productId) {
-    try {
-        // TODO: カート追加APIのURLを指定: api/cart/add.php
-        const uri = "";
-        // TODO: POSTリクエストで商品ID(productId)を JSONで送信
-        const response = await fetch(uri, {
-            method: '',
-            headers: { 'Content-Type': 'application/json' },
-            body: "",
-        });
-        // JSON形式でレスポンスを取得
-        const result = await response.json();
+  try {
+    // TODO: カート追加APIのURLを指定: api/cart/add.php
+    const uri = "";
+    // TODO: POSTリクエストで商品ID(productId)を JSONで送信
+    const response = await fetch(uri, {
+      method: "",
+      headers: { "Content-Type": "application/json" },
+      body: "",
+    });
+    // JSON形式でレスポンスを取得
+    const result = await response.json();
 
-        // カート更新結果をチェック
-        if (result.status === 'success') {
-            // カートバッジを更新
-            updateCartBadge(result.cartCount);
-            // カート一覧を更新
-            updateCartList(result.cart);
-            // 一時メッセージを表示
-            showFlash('カートに追加しました！');
-        }
-    } catch (error) {
-        showFlash('カートの更新に失敗しました');
+    // カート更新結果をチェック
+    if (result.status === "success") {
+      // カートバッジを更新
+      updateCartBadge(result.cartCount);
+      // カート一覧を更新
+      updateCartList(result.cart);
+      // 一時メッセージを表示
+      showFlash("カートに追加しました！");
     }
+  } catch (error) {
+    showFlash("カートの更新に失敗しました");
+  }
 }
 
 // カートバッジ更新
 function updateCartBadge(count) {
-    badge.textContent = count;
-    badge.classList.toggle('hidden', count === 0);
+  badge.textContent = count;
+  badge.classList.toggle("hidden", count === 0);
 }
 
 // カート一覧の表示更新
 function updateCartList(cartObj) {
-    const cartContainer = document.getElementById('cart-items');
-    let total = 0;
+  const cartContainer = document.getElementById("cart-items");
+  let total = 0;
 
-    // カート一覧を表示
-    const cartHtml = Object.keys(cartObj).map(id => {
-        const p = allProducts.find(item => item.id == id);
-        if (!p) return '';
+  // カート一覧を表示
+  const cartHtml = Object.keys(cartObj)
+    .map(id => {
+      const p = allProducts.find(item => item.id == id);
+      if (!p) return "";
 
-        // カート内の商品を表示
-        const qty = cartObj[id];
-        const subtotal = p.price * qty;
-        total += subtotal;
+      // カート内の商品を表示
+      const qty = cartObj[id];
+      const subtotal = p.price * qty;
+      total += subtotal;
 
-        return `
+      return `
             <div class="flex gap-4 border-b pb-4 items-center">
                 <img src="${p.image}" class="w-16 h-16 object-contain">
                 <div class="flex-1">
@@ -186,110 +181,114 @@ function updateCartList(cartObj) {
                 </div>
             </div>
         `;
-    }).join('');
+    })
+    .join("");
 
-    cartContainer.innerHTML = cartHtml || '<p class="text-center text-gray-500">カートは空です</p>';
-    document.getElementById('cart-total').textContent = `$${total.toFixed(2)}`;
+  cartContainer.innerHTML =
+    cartHtml || '<p class="text-center text-gray-500">カートは空です</p>';
+  document.getElementById("cart-total").textContent = `$${total.toFixed(2)}`;
 }
 
 // 個数変更関数
 async function updateQuantity(productId, qty) {
-    const uri = "api/cart/update.php";
-    const nextQty = Math.max(1, parseInt(qty, 10) || 1);
-    // POSTリクエストで商品ID(productId)と個数(qty)をJSONで送信
-    const response = await fetch(uri, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: productId, qty: nextQty }),
-    });
-    // JSON形式でレスポンスを取得
-    const result = await response.json();
-    // カート更新結果をチェック
-    if (result.status === 'success') {
-        updateCartBadge(result.cartCount);
-        updateCartList(result.cart);
-    } else {
-        showFlash('数量の更新に失敗しました');
-    }
+  const uri = "api/cart/update.php";
+  const nextQty = Math.max(1, parseInt(qty, 10) || 1);
+  // POSTリクエストで商品ID(productId)と個数(qty)をJSONで送信
+  const response = await fetch(uri, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id: productId, qty: nextQty }),
+  });
+  // JSON形式でレスポンスを取得
+  const result = await response.json();
+  // カート更新結果をチェック
+  if (result.status === "success") {
+    updateCartBadge(result.cartCount);
+    updateCartList(result.cart);
+  } else {
+    showFlash("数量の更新に失敗しました");
+  }
 }
 
 // カートから商品を削除
 async function removeItem(productId) {
-    const uri = "api/cart/remove.php";
-    if (!confirm('商品ID ' + productId + ' を削除しますか？')) {
-        return;
-    }
+  const uri = "api/cart/remove.php";
+  if (!confirm("商品ID " + productId + " を削除しますか？")) {
+    return;
+  }
 
-    // TODO: POSTリクエストで商品ID(id = productId)を送信
-    const result = await fetch(uri, {
-        method: '',
-        headers: { 'Content-Type': 'application/json' },
-        body: "",
-    });
-    // JSON形式でレスポンスを取得
-    const data = await result.json();
-    updateCartBadge(data.cartCount);
-    updateCartList(data.cart);
+  // TODO: POSTリクエストで商品ID(id = productId)を送信
+  const result = await fetch(uri, {
+    method: "",
+    headers: { "Content-Type": "application/json" },
+    body: "",
+  });
+  // JSON形式でレスポンスを取得
+  const data = await result.json();
+  updateCartBadge(data.cartCount);
+  updateCartList(data.cart);
 
-    // カート更新結果をチェック
-    if (data.status === 'success') {
-        showFlash('カートから削除しました');
-    } else {
-        showFlash('削除に失敗しました');
-    }
+  // カート更新結果をチェック
+  if (data.status === "success") {
+    showFlash("カートから削除しました");
+  } else {
+    showFlash("削除に失敗しました");
+  }
 }
 
 // 一時メッセージ表示
 function showFlash(message) {
-    const el = document.createElement('div');
-    el.className = 'flash-message';
-    el.textContent = message;
-    document.body.appendChild(el);
+  const el = document.createElement("div");
+  el.className = "flash-message";
+  el.textContent = message;
+  document.body.appendChild(el);
 
-    // 3秒後にDOMから削除
-    setTimeout(() => {
-        el.remove();
-    }, 3000);
+  // 3秒後にDOMから削除
+  setTimeout(() => {
+    el.remove();
+  }, 3000);
 }
 
 const closeDetail = () => {
-    detailModal.classList.add('hidden');
-    document.body.style.overflow = '';
-}
+  detailModal.classList.add("hidden");
+  document.body.style.overflow = "";
+};
 
 // イベントリスナー
-grid.addEventListener('click', (e) => {
-    const card = e.target.closest('.product-card');
-    if (card) showDetail(card.dataset.id);
+grid.addEventListener("click", e => {
+  const card = e.target.closest(".product-card");
+  if (card) showDetail(card.dataset.id);
 });
 
 // 詳細モーダルの閉じるボタン
-closeButton.addEventListener('click', () => {
-    closeDetail();
+closeButton.addEventListener("click", () => {
+  closeDetail();
 });
 
 // 詳細モーダルの外側をクリックして閉じる
-detailModal.addEventListener('click', (e) => {
-    if (e.target === detailModal) closeButton.click();
+detailModal.addEventListener("click", e => {
+  if (e.target === detailModal) closeButton.click();
 });
 
 // 詳細モーダル内のカート追加ボタンのクリックイベント
-detailContent.addEventListener('click', async (e) => {
-    if (e.target.classList.contains('add-to-cart-btn')) {
-        const productId = e.target.dataset.id;
-        await addToCart(productId);
-        closeDetail();
-    }
+detailContent.addEventListener("click", async e => {
+  if (e.target.classList.contains("add-to-cart-btn")) {
+    const productId = e.target.dataset.id;
+    await addToCart(productId);
+    closeDetail();
+  }
 });
 // カートモーダルの開閉
-cartOpenBtn.addEventListener('click', () => cartModal.classList.remove('hidden'));
+cartOpenBtn.addEventListener("click", () =>
+  cartModal.classList.remove("hidden"),
+);
 
 // カートモーダルの閉じるボタン
-cartCloseBtn.addEventListener('click', () => cartModal.classList.add('hidden'));
+cartCloseBtn.addEventListener("click", () => cartModal.classList.add("hidden"));
 
 // DOMContentLoaded
 (async () => {
-    // 商品データ
-    await fetchProducts();
-    // TODO: カート照合: fetchInitialCart(非同期)
+  // 商品データ
+  await fetchProducts();
+  // TODO: カート照合: fetchInitialCart(非同期)
 })();
