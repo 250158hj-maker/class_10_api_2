@@ -30,25 +30,23 @@ async function fetchProducts() {
 
 // 商品一覧を描画
 function renderProducts(products) {
-  // TODO: 商品一覧をレンダリング
   grid.innerHTML = products
     .map(
       p => `
         <div class="bg-white border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition cursor-pointer product-card" data-id="${p.id}">
             <div class="h-48 p-4 flex items-center justify-center">
-                <img src="" alt="${p.title}" class="max-h-full object-contain">
+                <img src=${p.image} alt="${p.title}" class="max-h-full object-contain">
             </div>
             <div class="p-4 border-t">
-                <span class="text-xs text-sky-500 font-semibold uppercase">カテゴリ</span>
-                <h2 class="text-sm font-bold text-gray-800 mt-1 line-clamp-2">タイトル</h2>
-                
+                <span class="text-xs text-sky-500 font-semibold uppercase">${p.category}</span>
+                <h2 class="text-sm font-bold text-gray-800 mt-1 line-clamp-2">${p.title}</h2>
                 <div class="flex items-center mt-2">
                     <span class="text-yellow-400 text-xs">★</span>
-                    <span class="text-xs font-bold ml-1">評価</span>
-                    <span class="text-xs text-gray-400 ml-2">(レビュー数)</span>
+                    <span class="text-xs font-bold ml-1">${p.rating.rate}</span>
+                    <span class="text-xs text-gray-400 ml-2">${p.rating.count}</span>
                 </div>
 
-                <p class="text-lg font-bold text-gray-900 mt-2">$価格</p>
+                <p class="text-lg font-bold text-gray-900 mt-2">$${p.price}</p>
             </div>
         </div>
     `,
